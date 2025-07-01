@@ -1,8 +1,5 @@
-import numpy as np
-import cProfile
 import io
 import pstats
-#import numba
 import uuid
 import argparse
 import os
@@ -16,11 +13,15 @@ from tqdm import tqdm
 from multiprocessing import Event, Process, Queue, Value, cpu_count
 from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster, ExecutionProfile, EXEC_PROFILE_DEFAULT
-from cassandra.policies import DCAwareRoundRobinPolicy, HostDistance
+from cassandra.policies import DCAwareRoundRobinPolicy, TokenAwarePolicy
 from cassandra.query import tuple_factory
 from cassandra.concurrent import execute_concurrent_with_args
+#import cProfile
+#import numba
 
-# https://docs.datastax.com/en/developer/python-driver/3.29/performance/index.html
+# 
+# https://python-driver.docs.scylladb.com/stable/performance.html 
+#
 
 # Generate fixed seeds per Process
 NAMESPACE = uuid.UUID("12345678-1234-5678-1234-567812345678")
@@ -72,7 +73,7 @@ def start_monitor(counter, total_rows, event):
 
 def get_session(args, create=False):
     profile = ExecutionProfile(
-        load_balancing_policy=DCAwareRoundRobinPolicy(local_dc=args.dc),
+        load_balancing_policy=TokenAwarePolicy(DCAwareRoundRobinPolicy(local_dc=args.dc)),
         consistency_level=ConsistencyLevel.LOCAL_QUORUM,
         row_factory=tuple_factory,
         request_timeout=10,
