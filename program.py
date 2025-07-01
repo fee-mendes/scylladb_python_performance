@@ -189,7 +189,7 @@ def main():
     parser.add_argument('address', help='ScyllaDB address')
     parser.add_argument('--dc', default='datacenter1', help='DC to send queries to (datacenter1)')
     parser.add_argument('--keyspace', default='test', help='Keyspace name (test)')
-    parser.add_argument('--compression', action='store_true', help='Enable LZ4 compression (true)')
+    parser.add_argument('--compression', action='store_true', help='Enable LZ4 compression (false)')
     parser.add_argument('--concurrency', type=int, default=1, help='Concurrency per process. (1)')
     parser.add_argument('--processes', type=int, default=cpu_count(), help='Number of processes. (core count)')
     parser.add_argument('--operations', type=int, default=1_000_000, help='Total operations (1M)')
