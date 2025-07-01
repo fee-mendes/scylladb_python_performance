@@ -1,0 +1,11 @@
+[project]
+name = "scylladb_performance"
+version = "0.1.0"
+description = "Best Practices using ScyllaDB with Python"
+readme = "README.md"
+requires-python = "==3.9.19"
+dependencies = [
+    "psutil>=7.0.0",
+    "scylla-driver>=3.29.3",
+    "tqdm>=4.67.1",
+]
