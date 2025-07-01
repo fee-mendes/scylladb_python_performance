@@ -7,7 +7,9 @@ This repository shows how to achieve best performance results when using [Scylla
 Due to the way Python works, the code example in this repository makes use of [PyPy](https://pypy.org/). When working with Python, one challenge users may stumble is low throughput due to the Python [GIL](https://wiki.python.org/moin/GlobalInterpreterLock). As noted under the driver's [Performance Notes](https://python-driver.docs.scylladb.com/stable/performance.html): 
 
 > Due to the GIL and limited concurrency, the driver can become CPU-bound pretty quickly. The sections below discuss further runtime and design considerations for mitigating this limitation.
-> (...) redated
+
+> (...) redacted (...)
+
 > Be sure to **never share any** `Cluster`, `Session`, or `ResponseFuture` **objects across multiple processes**. These objects should all be created after forking the process, not before.
 
 Interestingly enough, sometimes even following these best practices is not enough to achieve high throughput, at which point you should consider:
