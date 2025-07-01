@@ -10,7 +10,7 @@ import struct
 import time
 import threading
 from tqdm import tqdm
-from multiprocessing import Event, Process, Queue, Value, cpu_count
+from multiprocessing import Event, Process, Value, cpu_count
 from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster, ExecutionProfile, EXEC_PROFILE_DEFAULT
 from cassandra.policies import DCAwareRoundRobinPolicy, TokenAwarePolicy
@@ -104,8 +104,8 @@ def create_schema(session, args):
 def worker(args):
     (
         worker_id, address, dc, keyspace, compression,
-        concurrency, total_ops, blob_size, progress_queue,
-        event, counter, mode, read_ratio
+        concurrency, total_ops, blob_size, event,
+        counter, mode, read_ratio
     ) = args
 
     try:
@@ -219,8 +219,7 @@ def main():
     # Schema creation
     get_session(args, create=True)
 
-    # Progress Tracker Queue
-    queue = Queue()
+    # Progress Tracker Counter
     counter = Value('i', 0)
 
     # Each process gets its insert quota
@@ -229,8 +228,8 @@ def main():
         if i == processes - 1:
             rows = rows + (total_rows % processes)
         input_args.append((i, address, dc, keyspace, compression, concurrency,
-                           rows, blob_size, queue, event, counter,
-                           args.mode, args.read_ratio))
+                           rows, blob_size, event, counter, args.mode,
+                           args.read_ratio))
 
     progress_thread = start_monitor(counter, total_rows, event)
 
